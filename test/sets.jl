@@ -232,7 +232,9 @@ u = unique([1,1,2])
 @test unique(n->n % 3, [5,1,8,9,3,4,10,7,2,6]) == [5,1,9]
 # issue 20105
 @test @inferred(unique(x for x in 1:1)) == [1]
-@test unique(x for x in Any[1,1.0])::Vector{Real} == [1]
+@test unique(x for x in Any[1,1.0])::Vector{Any} == [1]
+@test unique(x for x in Real[1,1.0])::Vector{Real} == [1]
+@test unique(Integer[1,1,2])::Vector{Integer} == [1,2]
 
 # unique!
 @testset "unique!" begin
