@@ -310,7 +310,7 @@ Deprecated or removed
     instead ([#23187]).
 
   * `ctranspose` and `ctranspose!` have been deprecated in favor of `adjoint` and `adjoint!`,
-    respectively.
+    respectively ([#23235]).
 
 Command-line option changes
 ---------------------------
