@@ -507,3 +507,15 @@ end
     @test bufpos(s) == 26
     @test bufferdata(s) == "for x=1:10\n    éé=3\n    \nend"
 end
+
+@testset "change case on the right" begin
+    buf = IOBuffer()
+    LineEdit.edit_insert(buf, "aa bb CC")
+    seekstart(buf)
+    LineEdit.edit_upper_case(buf)
+    LineEdit.edit_title_case(buf)
+    @test String(take!(copy(buf))) == "AA Bb CC"
+    @test position(buf) == 5
+    LineEdit.edit_lower_case(buf)
+    @test String(take!(copy(buf))) == "AA Bb cc"
+end

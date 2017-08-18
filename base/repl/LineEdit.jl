@@ -599,6 +599,26 @@ function edit_transpose(buf::IOBuffer)
     return true
 end
 
+
+edit_upper_case(s) = edit_replace_word_right(s, uppercase)
+edit_lower_case(s) = edit_replace_word_right(s, lowercase)
+edit_title_case(s) = edit_replace_word_right(s, ucfirst)
+
+edit_replace_word_right(s, replace::Function) =
+    edit_replace_word_right(buffer(s), replace) && refresh_line(s)
+
+function edit_replace_word_right(buf::IOBuffer, replace::Function)
+    # put the cursor at the beginning of the next word
+    skipchars(buf, is_non_word_char)
+    b = position(buf)
+    char_move_word_right(buf)
+    e = position(buf)
+    e == b && return false
+    newstr = replace(String(buf.data[b+1:e]))
+    splice_buffer!(buf, b:e-1, newstr)
+    true
+end
+
 edit_clear(buf::IOBuffer) = truncate(buf, 0)
 
 function edit_clear(s::MIState)
@@ -1492,7 +1512,10 @@ AnyDict(
         input = bracketed_paste(s)
         edit_insert(s, input)
     end,
-    "^T" => (s,o...)->edit_transpose(s)
+    "^T" => (s,o...)->edit_transpose(s),
+    "\eu" => (s,o...)->edit_upper_case(s),
+    "\el" => (s,o...)->edit_lower_case(s),
+    "\ec" => (s,o...)->edit_title_case(s),
 )
 
 const history_keymap = AnyDict(
