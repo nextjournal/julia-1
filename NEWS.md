@@ -320,6 +320,8 @@ Deprecated or removed
 
   * `Base.SparseArrays.SpDiagIterator` has been removed ([#23261]).
 
+  * `diagm(A::BitMatrix)` has been deprecated, use `diagm(vec(A))` instead ([#23373]).
+
 Command-line option changes
 ---------------------------
 
