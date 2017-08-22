@@ -17,7 +17,6 @@
 #endif
 #ifdef _OS_LINUX_
 #  include <sys/syscall.h>
-#  include <sys/utsname.h>
 #endif
 #ifndef _OS_WINDOWS_
 #  include <sys/mman.h>
@@ -268,16 +267,6 @@ static void *alloc_shared_page(size_t size, size_t *id, bool exec)
 // Use `get_self_mem_fd` which has a guard to call this only once.
 static int _init_self_mem()
 {
-    struct utsname kernel;
-    uname(&kernel);
-    int major, minor;
-    if (-1 == sscanf(kernel.release, "%d.%d", &major, &minor))
-        return -1;
-    // Can't risk getting a memory block backed by transparent huge pages,
-    // which cause the kernel to freeze on systems that have the DirtyCOW
-    // mitigation patch, but are < 4.10.
-    if (!(major > 4 || (major == 4 && minor >= 10)))
-        return -1;
 #ifdef O_CLOEXEC
     int fd = open("/proc/self/mem", O_RDWR | O_SYNC | O_CLOEXEC);
     if (fd == -1)
