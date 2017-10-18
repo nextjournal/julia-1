@@ -30,6 +30,11 @@ JL_DLLEXPORT size_t jl_get_world_counter(void)
     return jl_world_counter;
 }
 
+JL_DLLEXPORT void jl_set_tls_world_age(size_t age)
+{
+    jl_get_ptls_states()->world_age = age;
+}
+
 JL_DLLEXPORT size_t jl_get_tls_world_age(void)
 {
     return jl_get_ptls_states()->world_age;
